@@ -107,15 +107,14 @@ while True:
 
 #colisiones
         #colision raqueta derecha
-    if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < playerB.ycor() + 40 and ball.ycor() > playerB.ycor() - 40):
+    if ball.distance(playerB) < 50 and ball.xcor() > 340:
         ball.setx(340)
-        ball.dx*=-1
+        ball.dx *= -1
         os.system("afplay boing.wav&")
-        
-        #colision raqueta izq
-    if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < playerA.ycor() + 40 and ball.ycor() > playerA.ycor() - 40):
+
+    if ball.distance(playerA) < 50 and ball.xcor() < -340:
         ball.setx(-340)
-        ball.dx*=-1
+        ball.dx *= -1
         os.system("afplay boing.wav&")
     
                                                      
