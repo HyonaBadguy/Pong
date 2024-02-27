@@ -106,11 +106,11 @@ while True:
         pen.write("Player A: {}  Player B: {}".format(playerAscore,playerBscore),align="center",font=("Courier",24,"normal"))
 
 #colisiones
-        #colision raqueta derecha
+        # Verifica la colision de la bola con la raqueta derecha
     if ball.distance(playerB) < 50 and ball.xcor() > 340:
-        ball.setx(340)
-        ball.dx *= -1
-        os.system("afplay boing.wav&")
+        ball.setx(340) #coloca la pelota en el borde de la raqueta
+        ball.dx *= -1 #invierte la direccion de la bola
+        os.system("afplay boing.wav&") #reproduce un sonido
 
     if ball.distance(playerA) < 50 and ball.xcor() < -340:
         ball.setx(-340)
