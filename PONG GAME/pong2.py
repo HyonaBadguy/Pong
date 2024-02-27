@@ -50,6 +50,8 @@ while run:
             if i.key == pygame.K_RIGHT and right_gadget_remaining > 0:
                 right_gadget = 1
         
+            if i.key == pygame.K_LEFT and right_gadget_remaining > 0:
+                right_gadget = 2
 
             if i.key == pygame.K_w:
                 left_paddle_vel = -.9
@@ -58,6 +60,8 @@ while run:
 
             if i.key == pygame.K_d and left_gadget_remaining > 0:
                 left_gadget = 1
+            if i.key == pygame.K_a and left_gadget_remaining > 0:
+                left_gadget = 2
 
         if i.type == pygame.KEYUP:
             right_paddle_vel = 0
@@ -148,6 +152,11 @@ while run:
             left_gadget = 0  
             left_gadget_remaining -= 1  
 
+    elif left_gadget == 2:
+        left_paddle_y = bola_y
+        left_gadget = 0
+        left_gadget_remaining -= 1
+
     if right_gadget== 1:        
         if bola_x + radius >= right_paddle_x and right_paddle_y <= bola_y <= right_paddle_y + paddle_height:
             bola_x = right_paddle_x - radius
@@ -156,10 +165,18 @@ while run:
             right_gadget = 0
         right_gadget_remaining -= 1
 
+    elif right_gadget == 2:
+        right_paddle_y = bola_y
+        right_gadget = 0
+        right_gadget_remaining -= 1
 
     #objetos
     pygame.draw.circle(wn,WHITE,(bola_x,bola_y),radius) 
     pygame.draw.rect(wn, WHITE, pygame.Rect(left_paddle_x, left_paddle_y,paddle_width, paddle_height))    
     pygame.draw.rect(wn, WHITE, pygame.Rect(right_paddle_x, right_paddle_y,paddle_width, paddle_height))    
 
+    if left_gadget == 1:
+        pygame.draw.circle(wn, (0,0,255), (left_paddle_x +10, left_paddle_y +10),4)
+    if right_gadget == 1 :
+        pygame.draw.circle(wn, (0,0,255), (right_paddle_x -10, right_paddle_y +10),4)
     pygame.display.update()
