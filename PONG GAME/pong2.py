@@ -3,6 +3,14 @@ import random
 
 pygame.init()
 
+gadget_pair = 1 
+ch = int( input("Enter choice (1/2): "))
+if ch == 1:
+        gadget_pair = 1
+elif ch == 2:
+        gadget_pair = 2
+
+
 #initials
 WIDTH, HIGH = 1000, 600
 wn = pygame.display.set_mode((WIDTH, HIGH))
@@ -18,8 +26,10 @@ WHITE = (255, 255, 255)
 #bola
 radius = 15
 bola_x,bola_y = WIDTH/2 - radius, HIGH/2 - radius
-
 bola_vel_x, bola_vel_y = .7, .7
+
+dummy_bola_x,dummy_bola_y = WIDTH/2 - radius, HIGH/2 - radius
+dummy_bola_vel_x, dummy_bola_vel_y = .7, .7
 
 
 
@@ -47,10 +57,10 @@ while run:
             if i.key == pygame.K_DOWN:
                 right_paddle_vel = .9
 
-            if i.key == pygame.K_RIGHT and right_gadget_remaining > 0:
+            if i.key == pygame.K_LEFT and right_gadget_remaining > 0:
                 right_gadget = 1
         
-            if i.key == pygame.K_LEFT and right_gadget_remaining > 0:
+            if i.key == pygame.K_RIGHT and right_gadget_remaining > 0:
                 right_gadget = 2
 
             if i.key == pygame.K_w:
@@ -71,57 +81,73 @@ while run:
     #movimientos de la bola
     if bola_y <= radius or bola_y >= HIGH - radius:
         bola_vel_y *= -1       
+    if dummy_bola_y <= 0 + radius or dummy_bola_y >= HIGH - radius:
+        dummy_bola_vel_y *= -1
     if bola_x >= WIDTH - radius:
         bola_x, bola_y = WIDTH/2 - radius, HIGH/2 - radius
-       
+        dummy_bola_x, dummy_bola_y = WIDTH/2 - radius, HIGH/2 - radius
+
         dir = random.choice(direction)
         ang = random.choice(angle)
         if dir == 0:
             if ang == 0:
                 bola_vel_y,bola_vel_x = -1.4, 0.7
+                dummy_bola_vel_y,dummy_bola_vel_x = -1.4, 0.7
             if ang == 1:
                 bola_vel_y,bola_vel_x = -0.7, 1.4
+                dummy_bola_vel_y,dummy_bola_vel_x = -0.7, 1.4
             if ang == 2:
-                bola_vel_x,bola_vel_y = -0.7, 1.7    
+                bola_vel_x,bola_vel_y = -0.7, 1.7 
+                dummy_bola_vel_x,dummy_bola_vel_y = -0.7, 1.7
 
         if dir == 1:
             if ang == 0:
                 bola_vel_y,bola_vel_x = 1.4, 0.7
+                dummy_bola_vel_y,dummy_bola_vel_x = 1.4, 0.7
             if ang == 1:
                 bola_vel_y,bola_vel_x = 0.7, 1.4
+                dummy_bola_vel_y,dummy_bola_vel_x = 0.7, 1.4
             if ang == 2:
-                bola_vel_x,bola_vel_y = 0.7, 1.7    
+                bola_vel_x,bola_vel_y = 0.7, 1.7   
+                dummy_bola_vel_x,dummy_bola_vel_y = 0.7, 1.7
         bola_vel_x *= -1
+        dummy_bola_vel_x *= -1
         
     if bola_x <= 0 + radius:
         bola_x, bola_y = WIDTH/2 - radius, HIGH/2 - radius
-        bola_vel_x, bola_vel_y = 1, 1
+        dummy_bola_x,dummy_bola_y = WIDTH/2 - radius, HIGH/2 - radius
+       
+       # bola_vel_x, bola_vel_y = 1, 1
 
         dir = random.choice(direction)
         ang = random.choice(angle)
         if dir == 0:
             if ang == 0:
                 bola_vel_y,bola_vel_x = -1.4, 0.7
+                dummy_bola_vel_y,dummy_bola_vel_x = -1.4, 0.7
             if ang == 1:
                 bola_vel_y,bola_vel_x = -0.7, 1.4
+                dummy_bola_vel_y,dummy_bola_vel_x = -0.7, 1.4
+                            
             if ang == 2:
-                bola_vel_x,bola_vel_y = -0.7, 1.7    
+                bola_vel_x,bola_vel_y = -0.7, 1.7 
+                dummy_bola_vel_x,dummy_bola_vel_y = -0.7, 1.7
 
         if dir == 1:
             if ang == 0:
                 bola_vel_y,bola_vel_x = 1.4, 0.7
+                dummy_bola_vel_y,dummy_bola_vel_x = 1.4, 0.7
             if ang == 1:
                 bola_vel_y,bola_vel_x = 0.7, 1.4
+                dummy_bola_vel_y,dummy_bola_vel_x = 0.7, 1.4
             if ang == 2:
                 bola_vel_x,bola_vel_y = 0.7, 1.7
+                dummy_bola_vel_x,dummy_bola_vel_y = 0.7, 1.7
 
-    #movimientos
-    bola_x += bola_vel_x    
-    bola_y += bola_vel_y
+    
 
         #movimientos de las raquetas
-    left_paddle_y += left_paddle_vel    
-    right_paddle_y += right_paddle_vel
+    
     if left_paddle_y >= HIGH - paddle_height:
         left_paddle_y = HIGH - paddle_height
     if left_paddle_y <= 0:
@@ -136,45 +162,84 @@ while run:
         #raqueta izq
     if bola_x - radius <= left_paddle_x + paddle_width and left_paddle_y <= bola_y <= left_paddle_y + paddle_height:
         bola_x = left_paddle_x + paddle_width + radius
+        dummy_bola_x = left_paddle_x + paddle_width + radius
         bola_vel_x *= -1
+        dummy_bola_vel_x *= -1
 
     #raqueta der
     if bola_x + radius >= right_paddle_x and right_paddle_y <= bola_y <= right_paddle_y + paddle_height:
         bola_x = right_paddle_x - radius
+        dummy_bola_x = right_paddle_x - radius
         bola_vel_x *= -1
+        dummy_bola_vel_x *= -1
         
 
     #gadgets in action
-    if left_gadget == 1:
-        if bola_x - radius <= left_paddle_x + paddle_width and left_paddle_y <= bola_y <= left_paddle_y + paddle_height:
-            bola_x = left_paddle_x + paddle_width + radius
-            bola_vel_x *= -3.5
-            left_gadget = 0  
-            left_gadget_remaining -= 1  
+    if gadget_pair==1:
+        if left_gadget == 1:
+            
+            if bola_x - radius <= left_paddle_x + paddle_width and left_paddle_y <= bola_y <= left_paddle_y + paddle_height:
+                bola_x = left_paddle_x + paddle_width + radius
+                bola_vel_x *= -3.5
+                dummy_bola_vel_y *= -3.5
+                left_gadget = 0  
+                left_gadget_remaining -= 1  
 
-    elif left_gadget == 2:
-        left_paddle_y = bola_y
-        left_gadget = 0
-        left_gadget_remaining -= 1
+        elif left_gadget == 2:
+            left_paddle_y = bola_y
+            left_gadget = 0
+            left_gadget_remaining -= 1
 
-    if right_gadget== 1:        
-        if bola_x + radius >= right_paddle_x and right_paddle_y <= bola_y <= right_paddle_y + paddle_height:
-            bola_x = right_paddle_x - radius
-            bola_vel_x *= -1
-            left_gadget_remaining -= 3.5
+        if right_gadget== 1:        
+            if bola_x + radius >= right_paddle_x and right_paddle_y <= bola_y <= right_paddle_y + paddle_height:
+                bola_x = right_paddle_x - radius
+                bola_vel_x *= -3.5
+                dummy_bola_vel_x *= -3.5
+                right_gadget = 0
+                right_gadget_remaining -= 1
+
+        elif right_gadget == 2:
+            right_paddle_y = bola_y
             right_gadget = 0
-        right_gadget_remaining -= 1
+            right_gadget_remaining -= 1
+    
+    elif gadget_pair == 2:
+        if left_gadget == 1:
+            if bola_x - radius <= left_paddle_x + paddle_width and left_paddle_y <= bola_y <= left_paddle_y + paddle_height:
+                bola_x = left_paddle_x + paddle_width + radius
+                dummy_bola_x = left_paddle_x + paddle_width + radius
+                bola_vel_x *= -1
+                dummy_bola_vel_x *= -1
+                dummy_bola_vel_y *= -1
+                left_gadget = 0
+                left_gadget_remaining -= 1
 
-    elif right_gadget == 2:
-        right_paddle_y = bola_y
-        right_gadget = 0
-        right_gadget_remaining -= 1
+        if right_gadget == 1:
+            if bola_x + radius >= right_paddle_x and right_paddle_y <= bola_y <= right_paddle_y + paddle_height:
+                bola_x = right_paddle_x - radius
+                dummy_bola_x = right_paddle_x - radius
+                bola_vel_x *= -1
+                dummy_bola_vel_x *= -1
+                dummy_bola_vel_y *= -1
+                right_gadget = 0
+                right_gadget_remaining -= 1
+#movimientos
+    bola_x += bola_vel_x    
+    bola_y += bola_vel_y
+    
+    dummy_bola_x += dummy_bola_vel_x
+    dummy_bola_y += dummy_bola_vel_y
+
+    left_paddle_y += left_paddle_vel    
+    right_paddle_y += right_paddle_vel
 
     #objetos
+     #bola
     pygame.draw.circle(wn,WHITE,(bola_x,bola_y),radius) 
     pygame.draw.rect(wn, WHITE, pygame.Rect(left_paddle_x, left_paddle_y,paddle_width, paddle_height))    
     pygame.draw.rect(wn, WHITE, pygame.Rect(right_paddle_x, right_paddle_y,paddle_width, paddle_height))    
-
+     #dummy bolla
+    pygame.draw.circle(wn, (255,0,0),(dummy_bola_x,dummy_bola_y),radius)
     if left_gadget == 1:
         pygame.draw.circle(wn, (0,0,255), (left_paddle_x +10, left_paddle_y +10),4)
     if right_gadget == 1 :
