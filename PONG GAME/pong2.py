@@ -38,7 +38,12 @@ paddle_width, paddle_height = 20,120
 left_paddle_y = right_paddle_y = HIGH/2 - paddle_height/2
 left_paddle_x, right_paddle_x = 100 - paddle_width/2, WIDTH - (100 + paddle_width/2)
 
+
+second_left_paddle_y = second_right_paddle_y = HIGH/2 - paddle_height/2
+second_left_paddle_x, second_right_paddle_x = 100 - paddle_width/2, WIDTH - (100 + paddle_width/2)
+
 right_paddle_vel= left_paddle_vel = 0
+second_right_paddle_vel= second_left_paddle_vel = 0
 
 #gadgets
 left_gadget =right_gadget = 0
@@ -54,8 +59,10 @@ while run:
         elif i.type == pygame.KEYDOWN:
             if i.key == pygame.K_UP:
                 right_paddle_vel = -.9
+                second_right_paddle_vel = -.9
             if i.key == pygame.K_DOWN:
                 right_paddle_vel = .9
+                second_right_paddle_vel = .9
 
             if i.key == pygame.K_LEFT and right_gadget_remaining > 0:
                 right_gadget = 1
@@ -65,8 +72,10 @@ while run:
 
             if i.key == pygame.K_w:
                 left_paddle_vel = -.9
+                second_left_paddle_vel = -.9
             if i.key == pygame.K_s:
                 left_paddle_vel = .9
+                second_left_paddle_vel = .9
 
             if i.key == pygame.K_d and left_gadget_remaining > 0:
                 left_gadget = 1
@@ -74,7 +83,9 @@ while run:
                 left_gadget = 2
 
         if i.type == pygame.KEYUP:
+            second_right_paddle_vel = 0
             right_paddle_vel = 0
+            second_left_paddle_vel = 0
             left_paddle_vel = 0
 
 
@@ -147,7 +158,7 @@ while run:
     
 
         #movimientos de las raquetas
-    
+            #raqueta 1
     if left_paddle_y >= HIGH - paddle_height:
         left_paddle_y = HIGH - paddle_height
     if left_paddle_y <= 0:
@@ -157,21 +168,60 @@ while run:
         right_paddle_y = HIGH - paddle_height
     if right_paddle_y <= 0:
         right_paddle_y = 0   
+        #raqueta gadget
+    if second_left_paddle_y >= HIGH - paddle_height:
+        second_left_paddle_y = HIGH - paddle_height
+    if second_left_paddle_y <= 0:
+        second_left_paddle_y = 0
+
+    if second_right_paddle_y >= HIGH - paddle_height:
+        second_right_paddle_y = HIGH - paddle_height
+    if second_right_paddle_y <= 0:
+        second_right_paddle_y = 0       
 
     #colisiones de las raquetas
         #raqueta izq
-    if bola_x - radius <= left_paddle_x + paddle_width and left_paddle_y <= bola_y <= left_paddle_y + paddle_height:
-        bola_x = left_paddle_x + paddle_width + radius
-        dummy_bola_x = left_paddle_x + paddle_width + radius
-        bola_vel_x *= -1
-        dummy_bola_vel_x *= -1
+    if second_left_paddle_y == left_paddle_y:    
+        if bola_x - radius <= left_paddle_x + paddle_width and left_paddle_y <= bola_y <= left_paddle_y + paddle_height:
+            bola_x = left_paddle_x + paddle_width + radius
+            dummy_bola_x = left_paddle_x + paddle_width + radius
+            bola_vel_x *= -1
+            dummy_bola_vel_x *= -1
+    if second_left_paddle_y != left_paddle_y:
+        if bola_x - radius <= left_paddle_x + paddle_width and left_paddle_y <= bola_y <= left_paddle_y + paddle_height:
+            bola_x = left_paddle_x + paddle_width + radius
+            dummy_bola_x = left_paddle_x + paddle_width + radius
+            bola_vel_x *= -1
+            dummy_bola_vel_x *= -1
+        
+        if bola_x - radius <= second_left_paddle_x + paddle_width and second_left_paddle_y <= bola_y <= second_left_paddle_y + paddle_height:
+            bola_x = second_left_paddle_x + paddle_width + radius
+            dummy_bola_x = second_left_paddle_x + paddle_width + radius
+            bola_vel_x *= -1
+            dummy_bola_vel_x *= -1
+        
+
 
     #raqueta der
-    if bola_x + radius >= right_paddle_x and right_paddle_y <= bola_y <= right_paddle_y + paddle_height:
-        bola_x = right_paddle_x - radius
-        dummy_bola_x = right_paddle_x - radius
-        bola_vel_x *= -1
-        dummy_bola_vel_x *= -1
+    if second_right_paddle_y == right_paddle_y:
+        if bola_x + radius >= right_paddle_x and right_paddle_y <= bola_y <= right_paddle_y + paddle_height:
+            bola_x = right_paddle_x - radius
+            dummy_bola_x = right_paddle_x - radius
+            bola_vel_x *= -1
+            dummy_bola_vel_x *= -1
+
+    if second_right_paddle_y != right_paddle_y:
+        if bola_x + radius >= right_paddle_x and right_paddle_y <= bola_y <= right_paddle_y + paddle_height:
+            bola_x = right_paddle_x - radius
+            dummy_bola_x = right_paddle_x - radius
+            bola_vel_x *= -1
+            dummy_bola_vel_x *= -1
+
+        if bola_x + radius >= second_right_paddle_x and second_right_paddle_y <= bola_y <= second_right_paddle_y + paddle_height:
+            bola_x = second_right_paddle_x - radius
+            dummy_bola_x = second_right_paddle_x - radius
+            bola_vel_x *= -1
+            dummy_bola_vel_x *= -1
         
 
     #gadgets in action
@@ -202,7 +252,7 @@ while run:
             right_paddle_y = bola_y
             right_gadget = 0
             right_gadget_remaining -= 1
-    
+    #second pair
     elif gadget_pair == 2:
         if left_gadget == 1:
             if bola_x - radius <= left_paddle_x + paddle_width and left_paddle_y <= bola_y <= left_paddle_y + paddle_height:
@@ -214,6 +264,11 @@ while run:
                 left_gadget = 0
                 left_gadget_remaining -= 1
 
+        elif left_gadget == 2:
+            second_left_paddle_y = left_paddle_y + 200
+            left_gadget = 0
+            left_gadget_remaining -= 1
+
         if right_gadget == 1:
             if bola_x + radius >= right_paddle_x and right_paddle_y <= bola_y <= right_paddle_y + paddle_height:
                 bola_x = right_paddle_x - radius
@@ -223,6 +278,12 @@ while run:
                 dummy_bola_vel_y *= -1
                 right_gadget = 0
                 right_gadget_remaining -= 1
+
+        elif right_gadget == 2:
+            second_right_paddle_y = right_paddle_y - 200
+            right_gadget = 0
+            right_gadget_remaining -= 1
+
 #movimientos
     bola_x += bola_vel_x    
     bola_y += bola_vel_y
@@ -233,13 +294,23 @@ while run:
     left_paddle_y += left_paddle_vel    
     right_paddle_y += right_paddle_vel
 
+    second_left_paddle_y += second_left_paddle_vel
+    second_right_paddle_y += second_right_paddle_vel
+
     #objetos
      #bola
     pygame.draw.circle(wn,WHITE,(bola_x,bola_y),radius) 
     pygame.draw.rect(wn, WHITE, pygame.Rect(left_paddle_x, left_paddle_y,paddle_width, paddle_height))    
     pygame.draw.rect(wn, WHITE, pygame.Rect(right_paddle_x, right_paddle_y,paddle_width, paddle_height))    
+
+
      #dummy bolla
     pygame.draw.circle(wn, (255,0,0),(dummy_bola_x,dummy_bola_y),radius)
+
+    # second paddle
+    pygame.draw.rect(wn, WHITE, pygame.Rect(second_left_paddle_x, second_left_paddle_y, paddle_width, paddle_height))
+    pygame.draw.rect(wn, WHITE, pygame.Rect(second_right_paddle_x, second_right_paddle_y, paddle_width, paddle_height))
+
     if left_gadget == 1:
         pygame.draw.circle(wn, (0,0,255), (left_paddle_x +10, left_paddle_y +10),4)
     if right_gadget == 1 :
