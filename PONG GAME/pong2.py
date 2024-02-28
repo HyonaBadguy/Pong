@@ -17,6 +17,8 @@ wn = pygame.display.set_mode((WIDTH, HIGH))
 pygame.display.set_caption('Super Pong 64')
 run = True
 
+player_1 = player_2=0
+
 direction = [0,1]
 angle = [0,1,2]
 
@@ -95,8 +97,12 @@ while run:
     if dummy_bola_y <= 0 + radius or dummy_bola_y >= HIGH - radius:
         dummy_bola_vel_y *= -1
     if bola_x >= WIDTH - radius:
+        player_1 += 1
         bola_x, bola_y = WIDTH/2 - radius, HIGH/2 - radius
         dummy_bola_x, dummy_bola_y = WIDTH/2 - radius, HIGH/2 - radius
+
+        second_left_paddle_y=left_paddle_y
+        second_right_paddle_y=right_paddle_y
 
         dir = random.choice(direction)
         ang = random.choice(angle)
@@ -125,9 +131,12 @@ while run:
         dummy_bola_vel_x *= -1
         
     if bola_x <= 0 + radius:
+        player_2 += 1
         bola_x, bola_y = WIDTH/2 - radius, HIGH/2 - radius
         dummy_bola_x,dummy_bola_y = WIDTH/2 - radius, HIGH/2 - radius
        
+        second_right_paddle_y = right_paddle_y
+        second_left_paddle_y = left_paddle_y
        # bola_vel_x, bola_vel_y = 1, 1
 
         dir = random.choice(direction)
@@ -297,6 +306,19 @@ while run:
     second_left_paddle_y += second_left_paddle_vel
     second_right_paddle_y += second_right_paddle_vel
 
+    #score board
+    font = pygame.font.SysFont("callibri", 30)
+    score_1 = font.render("Player 1: " + str(player_1), True, WHITE)
+    wn.blit(score_1, (10, 10))
+
+    score_2 = font.render("Player 2: " + str(player_2), True, WHITE)
+    wn.blit(score_2, (825, 10))
+
+    gad_left_1 = font.render("Gad Left:" + str(left_gadget_remaining), True, WHITE)
+    wn.blit(gad_left_1, (25, 65))
+    gad_left_2 = font.render("Gad Right:" + str(right_gadget_remaining), True, WHITE)
+    wn.blit(gad_left_1, (825, 65))
+
     #objetos
      #bola
     pygame.draw.circle(wn,WHITE,(bola_x,bola_y),radius) 
@@ -315,4 +337,20 @@ while run:
         pygame.draw.circle(wn, (0,0,255), (left_paddle_x +10, left_paddle_y +10),4)
     if right_gadget == 1 :
         pygame.draw.circle(wn, (0,0,255), (right_paddle_x -10, right_paddle_y +10),4)
+    pygame.display.update()
+
+
+
+    #end screen
+    winning_font = pygame.font.SysFont("callibri", 100)
+    if player_1 >= 3:
+        wn.fill (0,0,0)
+        end_text = winning_font.render("Player 1 Wins!", True, WHITE)
+        wn.blit(end_text, (300, 300))
+    
+    if player_2 >= 3:
+        wn.fill(0,0,0)
+        end_text = winning_font.render("Player 2 Wins!", True, WHITE)
+        wn.blit(end_text, (250, 300))
+
     pygame.display.update()
